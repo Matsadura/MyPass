@@ -1,0 +1,5 @@
+mycli
+*__pycache__/
+*.swp
+re
+sys

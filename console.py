@@ -11,7 +11,7 @@ from models.user import User
 import shlex  # for splitting the line along spaces except in double quotes
 
 classes = {"BaseModel": BaseModel, "Vault": Vault,
-            "Account": Account, "User": User}
+           "Account": Account, "User": User}
 
 
 class MYPASSCommand(cmd.Cmd):
@@ -43,10 +43,10 @@ class MYPASSCommand(cmd.Cmd):
                 else:
                     try:
                         value = int(value)
-                    except:
+                    except Exception as e:
                         try:
                             value = float(value)
-                        except:
+                        except Exception as e:
                             continue
                 new_dict[key] = value
         return new_dict
@@ -92,8 +92,9 @@ class MYPASSCommand(cmd.Cmd):
         elif args[0] in classes:
             if len(args) > 1:
                 key = args[0] + "." + args[1]
-                if key in models.storage.all():
-                    models.storage.all().pop(key)
+                obj = models.storage.all().get(key)
+                if obj:
+                    models.storage.delete(obj)
                     models.storage.save()
                 else:
                     print("** no instance found **")
@@ -122,9 +123,6 @@ class MYPASSCommand(cmd.Cmd):
     def do_update(self, arg):
         """Update an instance based on the class name, id, attribute & value"""
         args = shlex.split(arg)
-        integers = ["number_rooms", "number_bathrooms", "max_guest",
-                    "price_by_night"]
-        floats = ["latitude", "longitude"]
         if len(args) == 0:
             print("** class name missing **")
         elif args[0] in classes:
@@ -133,17 +131,6 @@ class MYPASSCommand(cmd.Cmd):
                 if k in models.storage.all():
                     if len(args) > 2:
                         if len(args) > 3:
-                            if args[0] == "Place":
-                                if args[2] in integers:
-                                    try:
-                                        args[3] = int(args[3])
-                                    except:
-                                        args[3] = 0
-                                elif args[2] in floats:
-                                    try:
-                                        args[3] = float(args[3])
-                                    except:
-                                        args[3] = 0.0
                             setattr(models.storage.all()[k], args[2], args[3])
                             models.storage.all()[k].save()
                         else:
@@ -156,6 +143,7 @@ class MYPASSCommand(cmd.Cmd):
                 print("** instance id missing **")
         else:
             print("** class doesn't exist **")
+
 
 if __name__ == '__main__':
     MYPASSCommand().cmdloop()

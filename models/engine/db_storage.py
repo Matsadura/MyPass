@@ -80,6 +80,15 @@ class DBStorage:
                 return obj
         return None
 
+    def get_specific(self, cls, key, value):
+        """ Returns the object based on the class and its key,
+            or None if not found """
+        objs = self.all(cls).values()
+        for obj in objs:
+            if hasattr(obj, key) and getattr(obj, key) == value:
+                return obj
+        return None
+
     def count(self, cls=None):
         """
         Returns the number of objects in storage matching the given class.

@@ -14,14 +14,12 @@ class User(BaseModel, Base):
     if models.storage_t == 'db':
         __tablename__ = 'users'
         email = Column(String(128), nullable=False)
-        username = Column(String(50), nullable=False)
         password = Column(String(128), nullable=False)
-        first_name = Column(String(128), nullable=True)
-        last_name = Column(String(128), nullable=True)
+        first_name = Column(String(128), nullable=False)
+        last_name = Column(String(128), nullable=False)
         vaults = relationship("Vault", back_populates="user", cascade="all, delete-orphan")
     else:
         email = ""
-        username = ""
         password = ""
         first_name = ""
         last_name = ""

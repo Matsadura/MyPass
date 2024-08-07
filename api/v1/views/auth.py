@@ -13,8 +13,7 @@ def register():
         if not user_info:
             abort(400, 'Not a JSON')
 
-        # TO REMOVE USERNAME LATER
-        required_fields = ['email', 'password', 'first_name', 'last_name', 'username']
+        required_fields = ['email', 'password', 'first_name', 'last_name']
         missing_fields = [field for field in required_fields if field not in user_info]
         if missing_fields:
             print(missing_fields)

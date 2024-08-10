@@ -13,7 +13,7 @@ import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-classes = { "Account": Account, "Vault": Vault, "User": User}
+classes = {"Account": Account, "Vault": Vault, "User": User}
 
 
 class DBStorage:
@@ -95,3 +95,14 @@ class DBStorage:
         If no class is passed, returns the count of all objects in storage.
         """
         return len(self.all(cls).keys())
+
+    def count_specific(self, cls, key, value):
+        """
+        Returns the number of objects in storage matching the given class,
+        key and value.
+        """
+        count = 0
+        for obj in self.all(cls).values():
+            if hasattr(obj, key) and getattr(obj, key) == value:
+                count += 1;
+        return count
